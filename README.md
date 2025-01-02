@@ -34,4 +34,7 @@ Delete topic:
 kafka-topics.sh --bootstrap-server localhost:9092 --topic order-events --delete
 ```
 
+### 12. Documenting Commands
+
+All the useful commands are present in [02-kafka-101](/01-workspace/02-kafka-101) folder 
 
