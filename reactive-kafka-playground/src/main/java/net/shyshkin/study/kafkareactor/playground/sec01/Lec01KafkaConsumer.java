@@ -20,7 +20,8 @@ public class Lec01KafkaConsumer {
                 BOOTSTRAP_SERVERS_CONFIG, "localhost:9092",
                 KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
                 VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class,
-                GROUP_ID_CONFIG, "demo-group"
+                GROUP_ID_CONFIG, "demo-group-123",
+                AUTO_OFFSET_RESET_CONFIG, "earliest"
         );
         var receiverOptions = ReceiverOptions.create(consumerProperties)
                 .subscription(List.of("order-events")); //topic name
