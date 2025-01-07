@@ -30,6 +30,7 @@ public class Lec01KafkaConsumer {
         KafkaReceiver<Object, Object> kafkaReceiver = KafkaReceiver.create(receiverOptions);
         kafkaReceiver.receive()
                 .doOnNext(record -> log.info("key: {}, value: {}", record.key(), record.value()))
+                .doOnNext(record -> record.receiverOffset().acknowledge())
                 .subscribe();
     }
 
