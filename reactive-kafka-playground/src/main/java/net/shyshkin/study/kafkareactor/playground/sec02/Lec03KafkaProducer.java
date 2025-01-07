@@ -33,9 +33,11 @@ public class Lec03KafkaProducer {
                 .map(i -> new ProducerRecord<>("order-events", i.toString(), "order-" + i))
                 .map(pr -> SenderRecord.create(pr, pr.key()));
 
-        KafkaSender.create(senderOptions)
+        KafkaSender<String, String> sender = KafkaSender.create(senderOptions);
+        sender
                 .send(eventFlux)
                 .doOnNext(result -> log.info("Order {} was successfully published", result.correlationMetadata()))
+                .doOnComplete(sender::close) // for one-time invocation
                 .subscribe();
 
 
