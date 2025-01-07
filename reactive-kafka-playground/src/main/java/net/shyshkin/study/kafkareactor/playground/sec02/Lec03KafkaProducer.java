@@ -1,13 +1,22 @@
 package net.shyshkin.study.kafkareactor.playground.sec02;
 
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
+import reactor.kafka.sender.KafkaSender;
 import reactor.kafka.sender.SenderOptions;
+import reactor.kafka.sender.SenderRecord;
 
+import java.time.Duration;
 import java.util.Map;
 
 import static org.apache.kafka.clients.producer.ProducerConfig.*;
 
 public class Lec03KafkaProducer {
+
+    private static Logger log = LoggerFactory.getLogger(Lec03KafkaProducer.class);
 
     public static void main(String[] args) {
 
@@ -17,8 +26,17 @@ public class Lec03KafkaProducer {
                 VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class
         );
 
-        var senderOptions = SenderOptions.create(producerProperties);
-//        KafkaSender.create(senderOptions)
+        var senderOptions = SenderOptions.<String, String>create(producerProperties);
+
+        var eventFlux = Flux.interval(Duration.ofMillis(100))
+                .take(100)
+                .map(i -> new ProducerRecord<>("order-events", i.toString(), "order-" + i))
+                .map(pr -> SenderRecord.create(pr, pr.key()));
+
+        KafkaSender.create(senderOptions)
+                .send(eventFlux)
+                .doOnNext(result -> log.info("Order {} was successfully published", result.correlationMetadata()))
+                .subscribe();
 
 
     }
