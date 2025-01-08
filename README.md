@@ -109,4 +109,9 @@ All the useful commands are present in [02-kafka-101](/01-workspace/02-kafka-101
 | 0    | none (fire-forget) |
 | 1    | leader             | 
 
+### 71. min.insync.replica
+
+- Default: `min.insync.replicas=1`
+- If we have 3 nodes it is good to have at least 1 copy of data: `min.insync.replicas=2`
+- `kafka-topics.sh --bootstrap-server localhost:9092 --topic order-events --create --replication-factor 3 --config min.insync.replica=2`
 
