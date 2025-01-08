@@ -1,5 +1,6 @@
 package net.shyshkin.study.kafkareactor.playground.sec12;
 
+import net.shyshkin.study.kafkareactor.playground.sec12.exception.SomeRetryableException;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,18 +43,25 @@ public class S12KafkaConsumerV2 {
         return Mono.just(record)
                 .doOnNext(r -> {
                     int errorProbability = ThreadLocalRandom.current().nextInt(0, 100);
-                    if (errorProbability > 33) {
-                        throw new RuntimeException("Sorry. Something bad happened during processing " + r.value().toString());
+                    if (errorProbability > 97) {
+                        throw new RuntimeException("Fatal error during during processing " + r.value().toString() + "; " + errorProbability + "%"); //should stop application
+                    } else if (errorProbability > 50) {
+                        throw new SomeRetryableException("Something bad happened during processing " + r.value().toString() + ". You can retry.");
                     }
                     log.info("key: {}, value: {}", record.key(), record.value());
-//                    r.receiverOffset().acknowledge();
+                    r.receiverOffset().acknowledge();
                 })
+                .retryWhen(retrySpec())
                 .doOnError(ex -> log.error(ex.getMessage()))
-                .retryWhen(Retry.fixedDelay(3, Duration.ofSeconds(1)))
-                .doOnError(ex -> log.error(ex.getMessage()))
-                .doFinally(s -> record.receiverOffset().acknowledge()) //ack anyway - for demo
-                .onErrorComplete()
+//                .doFinally(s -> record.receiverOffset().acknowledge()) //ack anyway - for demo
+                .onErrorResume(SomeRetryableException.class, ex -> Mono.fromRunnable(() -> record.receiverOffset().acknowledge()))
                 .then();
+    }
+
+    private static Retry retrySpec() {
+        return Retry.fixedDelay(3, Duration.ofSeconds(1))
+                .filter(SomeRetryableException.class::isInstance)
+                .onRetryExhaustedThrow((spec, signal) -> signal.failure());
     }
 
 }
