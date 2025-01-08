@@ -13,9 +13,9 @@ import java.util.Map;
 
 import static org.apache.kafka.clients.consumer.ConsumerConfig.*;
 
-public class S12KafkaConsumer {
+public class S12KafkaConsumerV1 {
 
-    private static final Logger log = LoggerFactory.getLogger(S12KafkaConsumer.class);
+    private static final Logger log = LoggerFactory.getLogger(S12KafkaConsumerV1.class);
 
     public static void main(String[] args) {
         var consumerProperties = Map.<String, Object>of(
