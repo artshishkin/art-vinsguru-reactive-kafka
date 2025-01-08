@@ -118,6 +118,7 @@ All the useful commands are present in [02-kafka-101](/01-workspace/02-kafka-101
 ### 74. Idempotent Consumer
 
 Recommended flow to prevent getting messages twice in case of ack failure (ex.: network issue)
+
 1. Let the producer set unique message/event id (UUID)
 2. Broker receives the messages
 3. Check if they are present in the DB table
@@ -129,11 +130,19 @@ Recommended flow to prevent getting messages twice in case of ack failure (ex.: 
 1. **none**
 2. gzip (good, but take more cpu)
 3. snappy (worse than gzip, but less cpu)
-4. lz4 
+4. lz4
 
 In `properties` file set:
+
 - `compression.type=lz4`
 
+### 78. How Many Replication Factor Should I Have?
 
+- Replication factor
+    - Decide based on the number of brokers to go down at a time (N)
+    - Ex. in a 100-node cluster we expect 5 nodes to go down at a time
+    - So minimum replicas to be safe = (N+1) = (5+1) = 6
+- What about **min.insync.replicas**!?
+    - if **min.insync.replicas** = 2, then (N+2) = (5+2) = 7
 
 
