@@ -6,12 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 import reactor.kafka.receiver.KafkaReceiver;
 import reactor.kafka.receiver.ReceiverOptions;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static org.apache.kafka.clients.consumer.ConsumerConfig.*;
 
@@ -42,8 +44,17 @@ public class S10KafkaConsumer {
 
     private static Mono<Void> batchProcess(Flux<ConsumerRecord<Object, Object>> batch) {
         return batch
+                .publishOn(Schedulers.boundedElastic())
                 .doFirst(() -> log.info("-------------Process batch-------------"))
-                .doOnNext(record -> log.info("key: {}, value: {}", record.key(), record.value()))
+                .doOnNext(record -> {
+                    log.info("Time-consuming process: start processing key: {}, value: {}", record.key(), record.value());
+                    try {
+                        Thread.sleep(ThreadLocalRandom.current().nextInt( 300));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    log.info("finished processing key: {}, value: {}", record.key(), record.value());
+                })
                 .then(Mono.delay(Duration.ofSeconds(1)))
                 .then();
     }
