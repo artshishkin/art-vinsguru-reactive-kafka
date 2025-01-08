@@ -115,3 +115,11 @@ All the useful commands are present in [02-kafka-101](/01-workspace/02-kafka-101
 - If we have 3 nodes it is good to have at least 1 copy of data: `min.insync.replicas=2`
 - `kafka-topics.sh --bootstrap-server localhost:9092 --topic order-events --create --replication-factor 3 --config min.insync.replica=2`
 
+### 74. Idempotent Consumer
+
+Recommended flow to prevent getting messages twice in case of ack failure (ex.: network issue)
+1. Let the producer set unique message/event id (UUID)
+2. Broker receives the messages
+3. Check if they are present in the DB table
+4. if yes - `duplicates` - simply ack and skip processing
+5. if no - `new message` - process, insert into the db and then ack
