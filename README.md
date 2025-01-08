@@ -87,14 +87,26 @@ All the useful commands are present in [02-kafka-101](/01-workspace/02-kafka-101
 6. Re-start broken node
     - `docker start kafka3`
 7. Describe changes:
-   - `kafka-topics.sh --bootstrap-server localhost:9092 --topic order-events --describe`
-   - Result:
-      - ```
-        Topic: order-events     TopicId: BFZomcnRRyqKfgJDlw7gGQ PartitionCount: 2       ReplicationFactor: 3    Configs:
-        Topic: order-events     Partition: 0    Leader: 1       Replicas: 3,1,2 Isr: 1,2,3
-        Topic: order-events     Partition: 1    Leader: 1       Replicas: 1,2,3 Isr: 1,2,3
-        ```
-      - Leader for partition 0 **LEFT THE SAME**
-      - In-sync replicas (Isr) changed to `1,2,3`
+    - `kafka-topics.sh --bootstrap-server localhost:9092 --topic order-events --describe`
+    - Result:
+        - ```
+          Topic: order-events     TopicId: BFZomcnRRyqKfgJDlw7gGQ PartitionCount: 2       ReplicationFactor: 3    Configs:
+          Topic: order-events     Partition: 0    Leader: 1       Replicas: 3,1,2 Isr: 1,2,3
+          Topic: order-events     Partition: 1    Leader: 1       Replicas: 1,2,3 Isr: 1,2,3
+          ```
+        - Leader for partition 0 **LEFT THE SAME**
+        - In-sync replicas (Isr) changed to `1,2,3`
 
-     
+---
+
+## Section 6: Best Practices
+
+### 70. Producer acks
+
+| acks | Behavior           |
+|------|--------------------|
+| -1   | all                |
+| 0    | none (fire-forget) |
+| 1    | leader             | 
+
+
