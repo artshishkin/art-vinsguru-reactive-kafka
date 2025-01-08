@@ -5,7 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.kafka.receiver.KafkaReceiver;
 import reactor.kafka.receiver.ReceiverOptions;
+import reactor.util.retry.Retry;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +35,8 @@ public class S12KafkaConsumer {
                 .doOnNext(record -> log.info("key: {}, value: {}", record.key(), record.value().toString().charAt(15))) //should throw exception
                 .doOnError(ex -> log.error(ex.getMessage()))
                 .doOnNext(record -> record.receiverOffset().acknowledge())
-                .subscribe();
+                .retryWhen(Retry.fixedDelay(3, Duration.ofSeconds(1)))
+                .blockLast();
     }
 
 }
