@@ -123,3 +123,17 @@ Recommended flow to prevent getting messages twice in case of ack failure (ex.: 
 3. Check if they are present in the DB table
 4. if yes - `duplicates` - simply ack and skip processing
 5. if no - `new message` - process, insert into the db and then ack
+
+### 75. Compression
+
+1. **none**
+2. gzip (good, but take more cpu)
+3. snappy (worse than gzip, but less cpu)
+4. lz4 
+
+In `properties` file set:
+- `compression.type=lz4`
+
+
+
+
