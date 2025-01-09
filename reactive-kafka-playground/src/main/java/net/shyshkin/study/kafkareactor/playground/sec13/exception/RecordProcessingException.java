@@ -1,4 +1,4 @@
-package net.shyshkin.study.kafkareactor.playground.sec12.exception;
+package net.shyshkin.study.kafkareactor.playground.sec13.exception;
 
 import reactor.kafka.receiver.ReceiverRecord;
 

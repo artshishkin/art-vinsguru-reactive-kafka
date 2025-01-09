@@ -1,6 +1,6 @@
-package net.shyshkin.study.kafkareactor.playground.sec12;
+package net.shyshkin.study.kafkareactor.playground.sec13;
 
-import net.shyshkin.study.kafkareactor.playground.sec12.exception.RecordProcessingException;
+import net.shyshkin.study.kafkareactor.playground.sec13.exception.RecordProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Mono;
@@ -10,9 +10,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class OrderEventProcessor {
     private static final Logger log = LoggerFactory.getLogger(OrderEventProcessor.class);
-    private final S12ReactiveDeadLetterTopicProducer<String, String> deadLetterTopicProducer;
+    private final S13ReactiveDeadLetterTopicProducer<String, String> deadLetterTopicProducer;
 
-    public OrderEventProcessor(S12ReactiveDeadLetterTopicProducer<String, String> deadLetterTopicProducer) {
+    public OrderEventProcessor(S13ReactiveDeadLetterTopicProducer<String, String> deadLetterTopicProducer) {
         this.deadLetterTopicProducer = deadLetterTopicProducer;
     }
 
@@ -21,7 +21,7 @@ public class OrderEventProcessor {
                 .doOnNext(r -> {
                     int errorProbability = ThreadLocalRandom.current().nextInt(0, 100);
                     if (errorProbability > 50) {
-                        throw new RuntimeException("Something bad happened during processing " + r.value() + ". You can retry.");
+                        throw new RuntimeException("Something bad happened during processing " + r.value());
                     }
                     log.info("key: {}, value: {}", record.key(), record.value());
                     r.receiverOffset().acknowledge();
