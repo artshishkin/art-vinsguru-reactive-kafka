@@ -23,4 +23,15 @@ kafka-console-consumer.sh \
     --group cg \
     --describe  
     
-     
+ kafka-consumer-groups.sh \
+    --bootstrap-server localhost:9092 \
+    --group con_con \
+    --describe
+
+kafka-console-consumer.sh \
+    --bootstrap-server localhost:9092 \
+    --topic order-events-dlt \
+    --property print.offset=true \
+    --property print.key=true \
+    --group con_con \
+    --from-beginning

@@ -44,7 +44,7 @@ public class S13KafkaConsumer {
                 GROUP_INSTANCE_ID_CONFIG, "1"
         );
         var receiverOptions = ReceiverOptions.<String, String>create(consumerProperties)
-                .subscription(List.of("order-events")); //topic name
+                .subscription(List.of("order-events", "order-events-dlt")); //topic name
 
         return KafkaReceiver.create(receiverOptions);
     }

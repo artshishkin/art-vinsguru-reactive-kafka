@@ -19,8 +19,9 @@ public class OrderEventProcessor {
     public Mono<Void> process(ReceiverRecord<String, String> record) {
         return Mono.just(record)
                 .doOnNext(r -> {
+                    //fixing a bug simulation
                     int errorProbability = ThreadLocalRandom.current().nextInt(0, 100);
-                    if (errorProbability > 50) {
+                    if (errorProbability > 70) {
                         throw new RuntimeException("Something bad happened during processing " + r.value());
                     }
                     log.info("key: {}, value: {}", record.key(), record.value());

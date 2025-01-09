@@ -36,6 +36,14 @@ kafka-consumer-groups.sh \
     --to-earliest \
     --execute
 
+kafka-consumer-groups.sh \
+    --bootstrap-server localhost:9092 \
+    --topic order-events-dlt \
+    --group con_con \
+    --reset-offsets \
+    --to-earliest \
+    --execute
+
 # -- to the end
 kafka-consumer-groups.sh \
     --bootstrap-server localhost:9092 \
