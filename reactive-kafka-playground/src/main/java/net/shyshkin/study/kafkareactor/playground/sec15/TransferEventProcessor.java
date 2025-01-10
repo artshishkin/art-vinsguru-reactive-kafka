@@ -8,6 +8,7 @@ import reactor.kafka.sender.KafkaSender;
 import reactor.kafka.sender.SenderResult;
 import reactor.kafka.sender.TransactionManager;
 
+import java.time.Duration;
 import java.util.function.Predicate;
 
 public class TransferEventProcessor {
@@ -35,7 +36,7 @@ public class TransferEventProcessor {
 
         return manager.begin()
                 .then(sender.send(recordFlux)
-                        .concatWith(Mono.fromRunnable(event.acknowledge()))
+                        .concatWith(Mono.delay(Duration.ofSeconds(1)).then(Mono.fromRunnable(event.acknowledge())))
                         .concatWith(manager.commit())
                         .last() //for simplicity. It is recommended to .collectList -> analyze -> make own consolidated result
                 )
