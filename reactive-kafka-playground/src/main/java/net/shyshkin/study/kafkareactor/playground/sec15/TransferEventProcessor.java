@@ -31,7 +31,12 @@ public class TransferEventProcessor {
 
     private Mono<SenderResult<String>> sendTransaction(TransferEvent event) {
         var senderRecords = mapper.toSenderRecords(event);
-        var recordFlux = Flux.fromIterable(senderRecords);
+//        var recordFlux = Flux.fromIterable(senderRecords);
+        var recordFlux = Flux.just(senderRecords.get(0))
+                .concatWith(Mono
+                        .delay(Duration.ofSeconds(1))
+                        .then(Mono.error(new RuntimeException("oops"))))
+                .concatWith(Mono.just(senderRecords.get(1)));
         TransactionManager manager = this.sender.transactionManager();
 
         return manager.begin()
