@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ConsumerRunner implements CommandLineRunner {
 
-    private final ReactiveKafkaConsumerTemplate<String, String> consumerTemplate;
+    private final ReactiveKafkaConsumerTemplate<String, OrderEvent> consumerTemplate;
 
     @Override
     public void run(String... args) throws Exception {
