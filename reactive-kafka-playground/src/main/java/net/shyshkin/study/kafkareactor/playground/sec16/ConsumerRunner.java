@@ -11,14 +11,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ConsumerRunner implements CommandLineRunner {
 
-    private final ReactiveKafkaConsumerTemplate<String, OrderEvent> consumerTemplate;
+    private final ReactiveKafkaConsumerTemplate<String, DummyOrder> consumerTemplate;
 
     @Override
     public void run(String... args) throws Exception {
         consumerTemplate
                 .receive()
                 .doOnNext(record -> record.headers().forEach(h -> log.info("header key: {}, value: {}", h.key(), new String(h.value()))))
-//                .doOnNext(record -> log.info("key: {}, value: {}", record.key(), record.value()))
+                .doOnNext(record -> log.info("key: {}, value: {}", record.key(), record.value().orderId()))
                 .subscribe();
     }
 

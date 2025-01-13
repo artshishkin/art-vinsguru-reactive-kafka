@@ -13,14 +13,16 @@ import java.util.List;
 public class KafkaConsumerConfig {
 
     @Bean
-    public ReceiverOptions<String, OrderEvent> receiverOptions(KafkaProperties kafkaProperties) {
-        return ReceiverOptions.<String, OrderEvent>create(kafkaProperties.buildConsumerProperties())
+    public ReceiverOptions<String, DummyOrder> receiverOptions(KafkaProperties kafkaProperties) {
+        return ReceiverOptions.<String, DummyOrder>create(kafkaProperties.buildConsumerProperties())
                 .consumerProperty(JsonDeserializer.REMOVE_TYPE_INFO_HEADERS, false)
+                .consumerProperty(JsonDeserializer.USE_TYPE_INFO_HEADERS, false) //throws  java.lang.IllegalStateException: No type information in headers and no default type provided
+                .consumerProperty(JsonDeserializer.VALUE_DEFAULT_TYPE, DummyOrder.class) // > ADD DEFAULT TYPE
                 .subscription(List.of("order-events"));
     }
 
     @Bean
-    public ReactiveKafkaConsumerTemplate<String, OrderEvent> consumerTemplate(ReceiverOptions<String, OrderEvent> receiverOptions) {
+    public ReactiveKafkaConsumerTemplate<String, DummyOrder> consumerTemplate(ReceiverOptions<String, DummyOrder> receiverOptions) {
         return new ReactiveKafkaConsumerTemplate<>(receiverOptions);
     }
 
