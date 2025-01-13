@@ -53,6 +53,14 @@ kafka-consumer-groups.sh \
     --to-latest \
     --execute   
 
+kafka-consumer-groups.sh \
+    --bootstrap-server localhost:9092 \
+    --topic order-events \
+    --group demo-group \
+    --reset-offsets \
+    --to-latest \
+    --execute
+
 # -- to date-time
 kafka-consumer-groups.sh \
     --bootstrap-server localhost:9092 \

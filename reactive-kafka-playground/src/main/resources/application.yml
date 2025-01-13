@@ -1,3 +1,5 @@
+server:
+  port: 0
 spring:
   application:
     name: reactive-kafka-playground
@@ -11,3 +13,7 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         'group.instance.id': 1
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
