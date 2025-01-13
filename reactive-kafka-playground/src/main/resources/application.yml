@@ -13,6 +13,7 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         'group.instance.id': 1
+        'spring.json.trusted.packages': net.shyshkin.study.kafkareactor.playground.sec16 #JsonDeserializer.TRUSTED_PACKAGES
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
