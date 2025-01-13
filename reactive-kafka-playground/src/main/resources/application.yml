@@ -14,6 +14,7 @@ spring:
       properties:
         'group.instance.id': 1
         'spring.json.trusted.packages': net.shyshkin.study.kafkareactor.playground.sec16 #JsonDeserializer.TRUSTED_PACKAGES
+#        'spring.json.remove.type.headers': false
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
